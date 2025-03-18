@@ -3,8 +3,90 @@
   margin: 0;
   box-sizing: border-box;
 }
+.main{
+  width: 100vw;
+  height: 100vh;
+  margin:auto;
+  text-align: center;
+  padding: 1.2rem;
+  background-image:
+    url(https://cdn.pixabay.com/photo/2021/02/15/08/35/breakwater-6017041_1280.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 h2{
   font-family: fantasy;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   color:rgb(169, 94, 19);
+}
+
+.drag-img{
+  width: 300px;
+  height: 180px;
+}
+
+@media (max-width:1024px) {
+  .main{
+    padding: 1rem;
+    height: 100dvh;
+    min-height: fit-content;
+  }
+
+  .image-item{
+    padding: 12px !important;
+  }
+  .drag-img{
+    width: 250px;
+    height: 140px;
+  }
+}
+
+@media (max-width:768px) {
+  .main{
+    padding: 1rem;
+    height: 100dvh;
+    min-height: fit-content;
+  }
+
+  .image-item{
+    padding: 10px !important;
+  }
+  .drag-img{
+    width: 200px;
+    height: 120px;
+  }
+}
+
+@media (max-width:480px) {
+  .main{
+    padding: 0.5rem;
+    height: 100dvh;
+    min-height: fit-content;
+  }
+  ul{
+    justify-content: space-evenly !important;
+  }
+  .image-item{
+    padding: 8px !important;
+  }
+  .drag-img{
+    width: 130px;
+    height: 80px;
+  }
+}
+
+@media (max-width:350px) {
+  .main{
+    padding: 0.5rem;
+    height: 100dvh;
+    min-height: fit-content;
+  }
+  
+  .image-item{
+    padding: 6px !important;
+  }
+  .drag-img{
+    width: 100px;
+    height: 60px;
+  }
 }
