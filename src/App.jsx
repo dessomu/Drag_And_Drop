@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 function App() {
@@ -18,10 +18,16 @@ function App() {
     "https://cdn.pixabay.com/photo/2022/10/08/16/47/austria-7507345_1280.jpg",
   ]);
   const [draggedItemIndex, setDraggedItemIndex] = useState(null);
+  const listRef = useRef(null);
 
   //when drag starts
   function handleDragStart(index) {
     setDraggedItemIndex(index);
+  }
+
+  function handleTouchStart(index) {
+    setDraggedItemIndex(index);
+    console.log(index);
   }
 
   //while dragging
@@ -43,21 +49,42 @@ function App() {
     setDraggedItemIndex(null);
   }
 
+  // 🔹 Detect where the user stopped touching
+  const handleTouchEnd = (event) => {
+    if (draggedItemIndex === null) return;
+
+    // Get touch position
+    const touch = event.changedTouches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+
+    // Get the element at that position
+    const element = document.elementFromPoint(x, y);
+    if (!element) return;
+
+    // Find the index of the dropped image
+    const droppedIndex = [...listRef.current.children].indexOf(
+      element.closest(".image-item")
+    );
+
+    if (droppedIndex !== -1 && droppedIndex !== draggedItemIndex) {
+      // Swap images
+      const newImages = [...items];
+      [newImages[draggedItemIndex], newImages[droppedIndex]] = [
+        newImages[droppedIndex],
+        newImages[draggedItemIndex],
+      ];
+      setItems(newImages);
+    }
+
+    setDraggedItemIndex(null);
+  };
+
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        margin: "auto",
-        textAlign: "center",
-        padding: "20px",
-        backgroundImage:
-          "url(https://cdn.pixabay.com/photo/2021/02/15/08/35/breakwater-6017041_1280.jpg)",
-        backgroundSize: "cover",
-      }}
-    >
+    <div className="main">
       <h2 style={{ marginBottom: "10px" }}>Swap Images</h2>
       <ul
+        ref={listRef}
         style={{
           listStyle: "none",
           padding: 0,
@@ -74,6 +101,9 @@ function App() {
             onDragStart={() => handleDragStart(index)}
             onDragOver={handleDragOver}
             onDrop={() => handleDrop(index)}
+            //for mobile or tablet screen
+            onTouchStart={() => handleTouchStart(index)}
+            onTouchEnd={handleTouchEnd}
             layout
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,13 +117,11 @@ function App() {
               borderRadius: "8px",
               border: "1px solid #bbb",
               cursor: "grab",
+              touchAction: "none",
             }}
+            className="image-item"
           >
-            <img
-              src={item}
-              alt={`image ${index + 1}`}
-              style={{ width: "300px", height: "180px" }}
-            />
+            <img className="drag-img" src={item} alt={`image ${index + 1}`} />
           </motion.li>
         ))}
       </ul>
